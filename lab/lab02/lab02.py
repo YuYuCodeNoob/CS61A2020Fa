@@ -15,7 +15,7 @@ def lambda_curry2(func):
     3
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return lambda y :lambda x : func(y,x)
 
 
 
