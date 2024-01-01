@@ -47,7 +47,7 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
-
+    return lambda n : sum(condition(n,i) for i in range(1,n+1)) 
 
 
 def compose1(f, g):
@@ -82,7 +82,7 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
-
+    return lambda x : f(g(x)) == g(f(x))
 
 
 def cycle(f1, f2, f3):
@@ -112,4 +112,16 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
-
+    def func(x,N):
+        fc = lambda x :x
+        k = 1
+        while k <= N:
+            if k % 3 == 1 :
+                fc = compose1(f1,fc)
+            elif k % 3 == 2:
+                fc = compose1(f2,fc)
+            else:
+                fc = compose1(f3,fc)
+            k += 1
+        return fc(x)
+    return lambda y : lambda x : func(x,y)
