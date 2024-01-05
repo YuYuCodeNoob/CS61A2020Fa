@@ -270,12 +270,12 @@ def announce_highest(who, last_score=0, running_high=0):
     def say(score0,score1):
         if who:
             mx = max(running_high,score1 - last_score)
-            if score1 > last_score and (score1 - last_score) > running_high:
+            if mx > running_high:
                 print(f"{mx} point(s)! The most yet for Player {who}")
             return announce_highest(who,score1,mx)
         else:
             mx = max(running_high,score0 - running_high)
-            if score0 > last_score and (score0 - last_score) > running_high:
+            if mx > running_high:
                 print(f"{mx} point(s)! The most yet for Player {who}")
             return announce_highest(who,score0,mx)
     return say
