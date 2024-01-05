@@ -24,6 +24,14 @@ def roll_dice(num_rolls, dice=six_sided):
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
     # END PROBLEM 1
+    res = 0
+    flag = False
+    for i in range(num_rolls):
+        point = dice()
+        if point == 1:
+            flag = True
+        res += point
+    return 1 if flag else res
 
 
 def free_bacon(score):
@@ -33,12 +41,12 @@ def free_bacon(score):
     """
     assert score < 100, 'The game should be over.'
     pi = FIRST_101_DIGITS_OF_PI
-
     # Trim pi to only (score + 1) digit(s)
     # BEGIN PROBLEM 2
+
     "*** YOUR CODE HERE ***"
     # END PROBLEM 2
-
+    pi = pi // pow(10,100 - score)
     return pi % 10 + 3
 
 
@@ -57,6 +65,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if num_rolls == 0 :
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls,dice)
     # END PROBLEM 3
 
 
@@ -80,6 +92,15 @@ def swine_align(player_score, opponent_score):
     # BEGIN PROBLEM 4a
     "*** YOUR CODE HERE ***"
     # END PROBLEM 4a
+    def GCD(a,b):
+        if b == 0 :
+            return a
+        return GCD(b,a%b)
+    if player_score == 0 or opponent_score == 0:
+        return False
+    else:
+        gcd = GCD(player_score,opponent_score)
+    return True if gcd >= 10 and opponent_score >= 10 else False
 
 
 def pig_pass(player_score, opponent_score):
@@ -101,6 +122,7 @@ def pig_pass(player_score, opponent_score):
     """
     # BEGIN PROBLEM 4b
     "*** YOUR CODE HERE ***"
+    return True if opponent_score > player_score and opponent_score - player_score < 3 else False
     # END PROBLEM 4b
 
 
@@ -142,6 +164,23 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     "*** YOUR CODE HERE ***"
     # END PROBLEM 5
     # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
+    while score1 < goal and score0 < goal:
+        # now is 0
+        if who == 0:
+            score0 += take_turn(strategy0(score0,score1),score1,dice)
+            say = say(score0,score1)
+            while extra_turn(score0,score1) and score0 < goal:
+                    score0 += take_turn(strategy0(score0,score1),score1,dice)
+                    say = say(score0,score1)
+            who = other(who)
+        #now is 1
+        else:
+            score1 += take_turn(strategy1(score1,score0),score0,dice)
+            say = say(score0,score1)
+            while extra_turn(score1,score0) and score1 < goal:
+                score1 += take_turn(strategy1(score1,score0),score0,dice)
+                say = say(score0,score1)
+            who = other(who)
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
     # END PROBLEM 6
@@ -228,6 +267,19 @@ def announce_highest(who, last_score=0, running_high=0):
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    def say(score0,score1):
+        if who:
+            mx = max(running_high,score1 - last_score)
+            if score1 > last_score and (score1 - last_score) > running_high:
+                print(f"{mx} point(s)! The most yet for Player {who}")
+            return announce_highest(who,score1,mx)
+        else:
+            mx = max(running_high,score0 - running_high)
+            if score0 > last_score and (score0 - last_score) > running_high:
+                print(f"{mx} point(s)! The most yet for Player {who}")
+            return announce_highest(who,score0,mx)
+    return say
+    
     # END PROBLEM 7
 
 
