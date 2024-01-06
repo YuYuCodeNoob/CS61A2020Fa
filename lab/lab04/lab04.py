@@ -19,6 +19,9 @@ def skip_add(n):
     True
     """
     "*** YOUR CODE HERE ***"
+    if n <= 0 :
+        return 0
+    return n + skip_add(n-2)
 
 
 def summation(n, term):
@@ -41,6 +44,10 @@ def summation(n, term):
     """
     assert n >= 1
     "*** YOUR CODE HERE ***"
+    if n == 1 :
+        return term(1)
+    else:
+        return term(n) + summation(n-1,term)
 
 
 def paths(m, n):
@@ -57,6 +64,17 @@ def paths(m, n):
     1
     """
     "*** YOUR CODE HERE ***"
+    cache = {}
+    def dfs(i,j):
+        if i == 1 or j == 1:
+            return 1
+        elif (i,j) in cache:
+            return cache[(i,j)]
+        else:
+            cache[(i,j)] = dfs(i-1,j) + dfs(i,j-1)
+            return cache[(i,j)]
+    return dfs(m,n)
+        
 
 
 
@@ -105,6 +123,12 @@ def max_subseq(n, t):
     5
     """
     "*** YOUR CODE HERE ***"
+    if t == 0 or n == 0:
+        return 0 
+    return max(n % 10 + 10 * max_subseq(n//10,t-1),max_subseq(n//10,t))
+        
+        
+        
 
 
 def add_chars(w1, w2):
@@ -134,4 +158,15 @@ def add_chars(w1, w2):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    n = len(w1)
+    m = len(w2)
+    def dfs(i,j):
+        if i == n:
+            return w2[j:m]
+        if j == m:
+            return ""
+        if w1[i] == w2[j]:
+            return dfs(i+1,j+1)
+        else:
+            return w2[j] + dfs(i,j+1)
+    return dfs(0,0)
