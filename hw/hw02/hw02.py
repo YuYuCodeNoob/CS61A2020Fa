@@ -23,7 +23,9 @@ def num_eights(x):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if x < 10 :
+        return 1 if x == 8 else 0
+    return 1 + num_eights(x//10) if x%10 == 8 else num_eights(x//10)
 
 def pingpong(n):
     """Return the nth element of the ping-pong sequence.
@@ -58,8 +60,14 @@ def pingpong(n):
     True
     """
     "*** YOUR CODE HERE ***"
-
-
+    def help(i,switch,res):
+        if i == n :
+            return res
+        if i % 8 == 0 or num_eights(i) > 0:
+            return help(i + 1,switch * - 1,res - switch)
+        else:
+            return help(i + 1,switch,res + switch)
+    return help(1,1,1)
 def missing_digits(n):
     """Given a number a that is in sorted, increasing order,
     return the number of missing digits in n. A missing digit is
@@ -88,7 +96,20 @@ def missing_digits(n):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    def help (n,last):
+        if n < 10 :
+            digit_nums = last - n - 1 
+            return 0 if digit_nums <= 0 else digit_nums  
+        else:
+            digit_nums = last - n % 10 - 1
+            if digit_nums <= 0:
+                return  help(n//10,n % 10)
+            else:
+                return digit_nums + help(n//10,n%10)
+    if n < 10 :
+        return 0
+    else:
+        return help(n//10,n%10)
 
 def next_largest_coin(coin):
     """Return the next coin. 
@@ -107,7 +128,6 @@ def next_largest_coin(coin):
     elif coin == 10:
         return 25
 
-
 def count_coins(total):
     """Return the number of ways to make change for total using coins of value of 1, 5, 10, 25.
     >>> count_coins(15)
@@ -124,6 +144,15 @@ def count_coins(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def dfs(res,coin):
+        if res == 0:
+            return 1
+        elif res < 0 or not coin:
+            return 0
+        else:
+            return dfs(res - coin,coin) + dfs(res,next_largest_coin(coin))
+    return dfs(total,1)
+
 
 
 from operator import sub, mul
@@ -137,6 +166,8 @@ def make_anonymous_factorial():
     >>> # ban any assignments or recursion
     >>> check(HW_SOURCE_FILE, 'make_anonymous_factorial', ['Assign', 'AugAssign', 'FunctionDef', 'Recursion'])
     True
+    recursive
+    return lambda x : 1 if x <= 1 else lambda x : mul(x,make_anonymous_factorial()(x-1))
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return (lambda f: lambda k: f(f, k))(lambda f, k: k if k == 1 else mul(k, f(f, sub(k, 1))))
 
