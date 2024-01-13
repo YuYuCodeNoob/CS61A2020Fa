@@ -18,6 +18,11 @@ def choose(paragraphs, select, k):
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
     # END PROBLEM 1
+    ls = []
+    for x in paragraphs:
+        if select(x):
+            ls.append(x)
+    return ls[k] if k < len(ls) else ""
 
 
 def about(topic):
@@ -34,6 +39,16 @@ def about(topic):
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
     # END PROBLEM 2
+    def select(paragraph:str):
+        paragraph  = split(lower(remove_punctuation(paragraph)))
+        for x in topic:
+            for y in paragraph:
+                if x == y :
+                    return True
+        return False
+    return select
+        
+
 
 
 def accuracy(typed, reference):
@@ -57,6 +72,17 @@ def accuracy(typed, reference):
     reference_words = split(reference)
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    remove_blank = []
+    for x in reference_words:
+        if  x != '':
+            remove_blank.append(x)
+    n = len(typed_words)
+    m = len(remove_blank)
+    res = 0
+    for i in range(min(m,n)):
+        if typed_words[i] == remove_blank[i]:
+            res +=1
+    return res * 100.0 /n  if n > 0 else 0.0
     # END PROBLEM 3
 
 
@@ -66,6 +92,8 @@ def wpm(typed, elapsed):
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
     # END PROBLEM 4
+    n = len(typed)
+    return n * 60 / (5 * elapsed)
 
 
 def autocorrect(user_word, valid_words, diff_function, limit):
@@ -75,6 +103,16 @@ def autocorrect(user_word, valid_words, diff_function, limit):
     """
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    candidate = None
+    MI = float('inf')
+    for x in valid_words:
+        diff = diff_function(x,user_word,limit)
+        if x == user_word:
+            return x
+        if diff < MI and diff <= limit:
+            MI = diff
+            candidate = x
+    return candidate if  candidate else user_word
     # END PROBLEM 5
 
 
@@ -84,36 +122,43 @@ def shifty_shifts(start, goal, limit):
     their lengths.
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    if len(start) > len(goal):
+        start,goal = goal,start
+    n = len(start)
+    def dfs(i,res):
+        if res > limit:
+            return res
+        if i >= n:
+            return res + len(goal[i:])
+        elif start[i] == goal[i]:
+            return dfs(i+1,res)
+        else:
+            return  dfs(i+1,res + 1)
+    n = dfs(0,0)
+    return n if n <= limit else limit + 1 
     # END PROBLEM 6
 
 
 def pawssible_patches(start, goal, limit):
     """A diff function that computes the edit distance from START to GOAL."""
-    assert False, 'Remove this line'
-
-    if ______________: # Fill in the condition
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    elif ___________: # Feel free to remove or add additional cases
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
-    else:
-        add_diff = ... # Fill in these lines
-        remove_diff = ...
-        substitute_diff = ...
-        # BEGIN
-        "*** YOUR CODE HERE ***"
-        # END
-
+    def dfs(start,goal,res):
+        if res > limit:
+            return res
+        if start == "" or goal == "": 
+            return res + max(len(start),len(goal))
+        elif start[0] == goal[0]: 
+            return dfs(start[1:],goal[1:],res)
+        else:
+            add_diff = dfs(start,goal[1:],res + 1)
+            remove_diff = dfs(start[1:],goal,res + 1)
+            substitute_diff = dfs(start[1:],goal[1:],res+1)
+            return   min(add_diff,min(remove_diff,substitute_diff))
+    m = dfs(start,goal,0)
+    return m if m <= limit else limit + 1
 
 def final_diff(start, goal, limit):
     """A diff function. If you implement this function, it will be used."""
-    assert False, 'Remove this line to use your final_diff function'
+    return pawssible_patches(start,goal,limit)
 
 
 ###########
@@ -125,6 +170,18 @@ def report_progress(typed, prompt, user_id, send):
     """Send a report of your id and progress so far to the multiplayer server."""
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    m = len(typed)
+    n = len(prompt)
+    assert m <= n
+    res = 0
+    for i in range(min(m,n)):
+        if typed[i] == prompt[i]:
+            res +=1
+        else:
+            break
+    res = res / n
+    send({'id':user_id,'progress':res})
+    return res
     # END PROBLEM 8
 
 
@@ -151,6 +208,14 @@ def time_per_word(times_per_player, words):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    res = []
+    for x in times_per_player:
+        path = []
+        n = len(x)
+        for i in range(n-1):
+            path.append(x[i+1] - x[i])
+        res.append(path)
+    return game(words,res)
     # END PROBLEM 9
 
 
@@ -167,6 +232,17 @@ def fastest_words(game):
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
     # END PROBLEM 10
+    Time = all_times(game)
+    players = [[] for _ in range(len(Time))]
+    for i in word_indices:
+        fastPlayer = 0
+        fastTime = Time[0][i]
+        for k in player_indices:
+            if Time[k][i] < fastTime:
+                fastPlayer = k
+                fastTime = Time[k][i]
+        players[fastPlayer].append(word_at(game, i))
+    return players
 
 
 def game(words, times):
