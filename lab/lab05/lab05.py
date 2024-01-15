@@ -12,6 +12,7 @@ def couple(s, t):
     """
     assert len(s) == len(t)
     "*** YOUR CODE HERE ***"
+    return [[a,b] for a,b in zip(s,t)]
 
 
 from math import sqrt
@@ -27,6 +28,11 @@ def distance(city_a, city_b):
     5.0
     """
     "*** YOUR CODE HERE ***"
+    latDistance = abs(get_lat(city_a) - get_lat(city_b))
+    lonDistance = abs(get_lon(city_a) - get_lon(city_b))
+    res = sqrt(latDistance ** 2 + lonDistance ** 2)
+
+    return res
 
 def closer_city(lat, lon, city_a, city_b):
     """
@@ -44,6 +50,8 @@ def closer_city(lat, lon, city_a, city_b):
     'Bucharest'
     """
     "*** YOUR CODE HERE ***"
+    tempCity = make_city('tempCity',lat,lon)
+    return get_name(city_a) if distance(tempCity,city_a) < distance(tempCity,city_b) else get_name(city_b)
 
 def check_city_abstraction():
     """
@@ -143,6 +151,14 @@ def berry_finder(t):
     True
     """
     "*** YOUR CODE HERE ***"
+    if label(t) == 'berry':
+        return True
+    Flag = False
+    for b in branches(t):
+        if Flag:
+            break
+        Flag = Flag or berry_finder(b)
+    return Flag
 
 
 def sprout_leaves(t, leaves):
@@ -179,7 +195,9 @@ def sprout_leaves(t, leaves):
           2
     """
     "*** YOUR CODE HERE ***"
-
+    if is_leaf(t):
+        return tree(label(t),[tree(leaf) for leaf in leaves])
+    return tree(label(t),[sprout_leaves(b,leaves) for b in branches(t)])
 # Abstraction tests for sprout_leaves and berry_finder
 def check_abstraction():
     """
@@ -237,7 +255,7 @@ def coords(fn, seq, lower, upper):
     [[-2, 4], [1, 1], [3, 9]]
     """
     "*** YOUR CODE HERE ***"
-    return ______
+    return [[x,fn(x)] for x in seq if fn(x) >= lower and fn(x) <= upper]
 
 
 def riffle(deck):
@@ -250,8 +268,7 @@ def riffle(deck):
     [0, 10, 1, 11, 2, 12, 3, 13, 4, 14, 5, 15, 6, 16, 7, 17, 8, 18, 9, 19]
     """
     "*** YOUR CODE HERE ***"
-    return _______
-
+    return [card for pair in zip(deck[:len(deck)//2], deck[len(deck)//2:]) for card in pair]
 
 def add_trees(t1, t2):
     """
@@ -289,6 +306,17 @@ def add_trees(t1, t2):
       5
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t1):
+        return tree(label(t1) + label(t2),branches(t2))
+    elif is_leaf(t2):
+        return tree(label(t1) + label(t2),branches(t1))
+    else:
+        if len(t1) > len(t2):
+            t1,t2 = t2,t1
+        t1 = t1 + [tree(0) for _ in range(len(t2) - len(t1))]
+        return tree(label(t1) + label(t2),[add_trees(b1,b2) for b1,b2 in zip(branches(t1),branches(t2))])
+
+    
 
 
 def build_successors_table(tokens):
