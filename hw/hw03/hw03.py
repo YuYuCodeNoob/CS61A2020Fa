@@ -44,11 +44,13 @@ def planet(size):
     """Construct a planet of some size."""
     assert size > 0
     "*** YOUR CODE HERE ***"
+    return ['planet',size]
 
 def size(w):
     """Select the size of a planet."""
     assert is_planet(w), 'must call size on a planet'
     "*** YOUR CODE HERE ***"
+    return w[1]
 
 def is_planet(w):
     """Whether w is a planet."""
@@ -105,7 +107,10 @@ def balanced(m):
     True
     """
     "*** YOUR CODE HERE ***"
-
+    if is_planet(m):
+        return True
+    Flag = total_weight(end(left(m))) * length(left(m)) == total_weight(end(right(m))) * length(right(m))
+    return Flag and balanced(end(left(m))) and balanced(end(right(m)))
 def totals_tree(m):
     """Return a tree representing the mobile with its total weight at the root.
 
@@ -136,6 +141,9 @@ def totals_tree(m):
     True
     """
     "*** YOUR CODE HERE ***"
+    if is_planet(m):
+        return tree(size(m))
+    return tree(total_weight(m),[totals_tree(end(left(m))),totals_tree(end(right(m)))])
 
 
 def replace_leaf(t, find_value, replace_value):
@@ -168,6 +176,9 @@ def replace_leaf(t, find_value, replace_value):
     True
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t) and label(t) == find_value:
+        return tree(replace_value)
+    return tree(label(t),[replace_leaf(b,find_value,replace_value) for b in branches(t)])
 
 
 def preorder(t):
@@ -181,7 +192,15 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
-
+    res = []
+    def dfs(t):
+        if not t :
+            return 
+        res.append(label(t))
+        for b in branches(t):
+            dfs(b)
+    dfs(t)
+    return res
 
 def has_path(t, word):
     """Return whether there is a path in a tree where the entries along the path
@@ -213,6 +232,11 @@ def has_path(t, word):
     """
     assert len(word) > 0, 'no path for empty word.'
     "*** YOUR CODE HERE ***"
+    if len(word) == 1 and label(t) == word[0]:
+        return True
+    if label(t) != word[0]:
+        return False
+    return sum([has_path(b,word[1:]) for b in branches(t)]) > 0
 
 
 def interval(a, b):
