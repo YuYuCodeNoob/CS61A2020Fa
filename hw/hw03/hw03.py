@@ -337,6 +337,7 @@ def quadratic(x, a, b, c):
         f_x0 = f(x0)
         return interval(min(f_l, f_r, f_x0), max(f_l, f_r, f_x0))
     else:
+        # x0 not in range interval x
         return interval(min(f_l, f_r), max(f_l, f_r))
 
 
