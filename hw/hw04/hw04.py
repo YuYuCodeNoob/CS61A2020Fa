@@ -142,18 +142,26 @@ def permutations(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
-    def dfs(path):
-        if len(path) == len(seq):
-            yield list(path)
-        for j in range(len(seq)):
-            if seq[j] in path:
-                pass
-            else:
-                path.append(seq[j])
-                yield from dfs(path)
-                path.pop()
-    return dfs([])
-
+    # first solution use higher function help to recur
+    # def dfs(path):
+    #     if len(path) == len(seq):
+    #         yield list(path)
+    #     for j in range(len(seq)):
+    #         if seq[j] in path:
+    #             pass
+    #         else:
+    #             path.append(seq[j])
+    #             yield from dfs(path)
+    #             path.pop()
+    # return dfs([])
+    # another solution
+    if len(seq) == 1:
+        yield seq
+    else:
+        for i in range(len(seq)):
+            new_seq = seq[:i] + seq[i+1:]
+            for j in permutations(new_seq):
+                yield [seq[i]] + list(j)
 
 def make_joint(withdraw, old_pass, new_pass):
     """Return a password-protected withdraw function that has joint access to
