@@ -65,18 +65,17 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
-    Attempts = []
+    Attempts,frozen = [],False
     def withdraw(amount,pwd):
-        nonlocal balance
-        if len(Attempts) == 3:
+        nonlocal balance,frozen
+        if frozen:
             return f"Frozen account. Attempts: {Attempts}"
         elif pwd != password:
             Attempts.append(pwd)
             if len(Attempts) == 3:
-                return f"Frozen account. Attempts: {Attempts}"
+                frozen = True
             return "Incorrect password"
         else:
-            Attempts = []
             if balance >= amount:
                 balance -= amount
                 return balance
@@ -195,6 +194,15 @@ def make_joint(withdraw, old_pass, new_pass):
     "Frozen account. Attempts: ['my', 'secret', 'password']"
     """
     "*** YOUR CODE HERE ***"
+    verification = withdraw(0, old_pass)
+    if type(verification) == str:
+        return verification
+    def new_withdraw(amount, pass_try):
+        if pass_try == new_pass:
+            return withdraw(amount, old_pass)
+        else:
+            return withdraw(amount, pass_try)
+    return new_withdraw
 
 
 def remainders_generator(m):
@@ -229,8 +237,13 @@ def remainders_generator(m):
     11
     """
     "*** YOUR CODE HERE ***"
-
-
+    def helper(i): 
+        for x in naturals():
+            if x % m == i:
+                yield x
+    for i in range(m):
+        yield helper(i)
+        
 def naturals():
     """A generator function that yields the infinite sequence of natural
     numbers, starting at 1.
