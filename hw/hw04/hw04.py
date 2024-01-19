@@ -19,7 +19,20 @@ def make_bank(balance):
     120
     """
     def bank(message, amount):
+        nonlocal balance
         "*** YOUR CODE HERE ***"
+        if message == "withdraw":
+            if balance >= amount:
+                balance -= amount
+                return balance
+            else:
+                return "Insufficient funds"
+        elif message == "deposit":
+            balance += amount
+            return balance
+        else:
+            return "Invalid message"
+
     return bank
 
 
@@ -52,6 +65,25 @@ def make_withdraw(balance, password):
     True
     """
     "*** YOUR CODE HERE ***"
+    Attempts = []
+    def withdraw(amount,pwd):
+        nonlocal balance
+        if len(Attempts) == 3:
+            return f"Frozen account. Attempts: {Attempts}"
+        elif pwd != password:
+            Attempts.append(pwd)
+            if len(Attempts) == 3:
+                return f"Frozen account. Attempts: {Attempts}"
+            return "Incorrect password"
+        else:
+            Attempts = []
+            if balance >= amount:
+                balance -= amount
+                return balance
+            else:
+                return "Insufficient funds"
+    return withdraw
+            
 
 
 def repeated(t, k):
@@ -76,6 +108,16 @@ def repeated(t, k):
     """
     assert k > 1
     "*** YOUR CODE HERE ***"
+    res = k - 1
+    candidate = next(t)
+    while res :
+        second = next(t)
+        if second == candidate:
+            res -= 1
+        else:
+            candidate = second 
+            res = k - 1
+    return candidate 
 
 
 def permutations(seq):
@@ -101,6 +143,17 @@ def permutations(seq):
     [['a', 'b'], ['b', 'a']]
     """
     "*** YOUR CODE HERE ***"
+    def dfs(path):
+        if len(path) == len(seq):
+            yield list(path)
+        for j in range(len(seq)):
+            if seq[j] in path:
+                pass
+            else:
+                path.append(seq[j])
+                yield from dfs(path)
+                path.pop()
+    return dfs([])
 
 
 def make_joint(withdraw, old_pass, new_pass):
