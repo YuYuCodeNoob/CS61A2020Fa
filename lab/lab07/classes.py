@@ -23,6 +23,9 @@ class Card:
         500
         """
         "*** YOUR CODE HERE ***"
+        self.name = name
+        self.attack = attack
+        self.defense = defense
 
     def power(self, other_card):
         """
@@ -42,6 +45,7 @@ class Card:
         50.0
         """
         "*** YOUR CODE HERE ***"
+        return self.attack - other_card.defense / 2
 
 
     def effect(self, other_card, player, opponent):
@@ -79,6 +83,7 @@ class Player:
         """
         self.deck = deck
         self.name = name
+        self.hand = [self.deck.draw() for _ in range(5)]
         "*** YOUR CODE HERE ***"
 
     def draw(self):
@@ -94,6 +99,7 @@ class Player:
         """
         assert not self.deck.is_empty(), 'Deck is empty!'
         "*** YOUR CODE HERE ***"
+        self.hand.append(self.deck.draw())
 
     def play(self, card_index):
         """Remove and return a card from the player's hand at the given index.
@@ -110,6 +116,10 @@ class Player:
         2
         """
         "*** YOUR CODE HERE ***"
+        assert card_index >= 0 and card_index < len(self.hand)
+        card = self.hand[card_index]
+        self.hand = self.hand[:card_index] + self.hand[card_index + 1:]
+        return card
 
     def display_hand(self):
         """
