@@ -36,6 +36,35 @@ class VendingMachine:
     'Here is your soda.'
     """
     "*** YOUR CODE HERE ***"
+    def __init__(self,name,price):
+        self.name = name
+        self.stock = 0
+        self.price = price
+        self.fund = 0
+    def vend(self):
+        if self.stock == 0:
+            return "Inventory empty. Restocking required."
+        else:
+            change = self.fund - self.price
+            if change < 0 :
+                 return 'You must add ${0} more funds.'.format(-change)
+            elif change == 0:
+                self.stock -= 1
+                return 'Here is your {0}.'.format(self.name)
+            else:
+                self.stock -= 1
+                self.fund = 0
+                return 'Here is your {0} and ${1} change.'.format(self.name, change)
+
+    def add_funds(self,amount):
+        if self.stock == 0:
+            return 'Inventory empty. Restocking required. Here is your ${0}.'.format(amount)
+        else:
+            self.fund += amount
+            return 'Current balance: ${0}'.format(self.fund)
+    def restock(self,amount):
+        self.stock += amount
+        return "Current {0} stock: {1}".format(self.name,self.stock)
 
 
 class Mint:
@@ -74,9 +103,11 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = self.current_year
 
 class Coin:
     def __init__(self, year):
@@ -84,6 +115,8 @@ class Coin:
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        Flag = Mint.current_year - self.year - 50
+        return self.cents if Flag < 0 else self.cents + Flag
 
 class Nickel(Coin):
     cents = 5
@@ -108,8 +141,16 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
-
-
+    res = []
+    while n :
+        res.append(n%10)
+        n//=10
+    def store(res):
+        if len(res) == 1:
+            return Link(res[0])
+        else:
+            return Link(res.pop(),store(res))
+    return store(res)
 def is_bst(t):
     """Returns True if the Tree t has the structure of a valid BST.
 
@@ -136,7 +177,31 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
-
+    def bst_min(t):
+        if t.is_leaf():
+            return t.label
+        if t is None:
+            return float('inf')
+        res = min(t.label,min(bst_min(b) for b in t.branches))
+        return res
+    def bst_max(t):
+        if t.is_leaf():
+            return t.label
+        if t is None:
+            return -float('inf')
+        res = max(t.label,max(bst_max(b) for b in t.branches))
+        return res
+    def dfs(t):
+        if t == None or t.is_leaf():
+            return True
+        left_branch,left_val = t.branches[0],bst_max(t.branches[0])
+        if len(t.branches) == 1:
+            return dfs(left_branch)
+        right_branch,right_val = t.branches[1],bst_min(t.branches[1])
+        if left_val > t.label or right_val < t.label:
+            return False
+        return dfs(left_branch) and dfs(right_branch)
+    return dfs(t)
 
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
@@ -149,6 +214,14 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    def dfs(t):
+        if t == None:
+            return 
+        else:
+            yield t.label
+            for b in t.branches:
+                yield from dfs(b)
+    return list(dfs(t))
 
 
 def path_yielder(t, value):
@@ -185,15 +258,11 @@ def path_yielder(t, value):
     >>> sorted(list(path_to_2))
     [[0, 2], [0, 2, 1, 2]]
     """
-
-    "*** YOUR CODE HERE ***"
-
-    for _______________ in _________________:
-        for _______________ in _________________:
-
-            "*** YOUR CODE HERE ***"
-
-
+    if t.label == value:
+        yield [value]
+    for b in t.branches:
+        for x in path_yielder(b, value):
+            yield [t.label] + list(x)
 class Link:
     """A linked list.
 
