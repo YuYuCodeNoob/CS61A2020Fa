@@ -1,4 +1,4 @@
-def insert_into_all(item, nested_list):
+def insert_into_all(item, nested_list:list):
     """Assuming that nested_list is a list of lists, return a new list
     consisting of all the lists in nested_list, but with item added to
     the front of each.
@@ -7,7 +7,7 @@ def insert_into_all(item, nested_list):
     >>> insert_into_all(0, nl)
     [[0], [0, 1, 2], [0, 3]]
     """
-    return ______________________________
+    return [[item]+i for i in nested_list]
 
 def subseqs(s):
     """Assuming that S is a list, return a nested list of all subsequences
@@ -19,11 +19,12 @@ def subseqs(s):
     >>> subseqs([])
     [[]]
     """
-    if ________________:
-        ________________
+    if s == [] :
+        return [[]]
     else:
-        ________________
-        ________________
+        next_subseq = subseqs(s[1:])
+        return next_subseq + insert_into_all(s[0],next_subseq)
+
 
 
 def inc_subseqs(s):
@@ -72,9 +73,9 @@ def num_trees(n):
     429
 
     """
-    if ____________________:
-        return _______________
-    return _______________
+    if n<=2:
+        return 1
+    return sum([num_trees(i) * num_trees(n-i) for i in range(1,n)])
 
 
 def make_generators_generator(g):
@@ -337,12 +338,12 @@ def deep_len(lnk):
     >>> deep_len(levels)
     5
     """
-    if ______________:
+    if lnk is Link.empty:
         return 0
-    elif ______________:
+    elif not isinstance(lnk, Link):
         return 1
     else:
-        return _________________________
+        return deep_len(lnk.first) + deep_len(lnk.rest)
 
 
 def make_to_string(front, mid, back, empty_repr):
@@ -361,10 +362,10 @@ def make_to_string(front, mid, back, empty_repr):
     '()'
     """
     def printer(lnk):
-        if ______________:
-            return _________________________
+        if lnk is Link.empty:
+            return empty_repr
         else:
-            return _________________________
+            return front + str(lnk.first) + mid  + printer(lnk.rest) + back
     return printer
 
 

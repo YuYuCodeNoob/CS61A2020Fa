@@ -1,0 +1,5 @@
+'subseqs-correct', (0, 70)
+'insert_into_all-correct', (512, 70)
+'num_trees-correct', (1024, 70)
+'make_to_string-correct', (1536, 70)
+'deep_len-correct', (2048, 70)
