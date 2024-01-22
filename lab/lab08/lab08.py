@@ -8,6 +8,10 @@ def convert_link(link):
     []
     """
     "*** YOUR CODE HERE ***"
+    if link == Link.empty:
+        return []
+    return [link.first] + convert_link(link.rest)
+
 
 
 def every_other(s):
@@ -28,6 +32,15 @@ def every_other(s):
     Link(4)
     """
     "*** YOUR CODE HERE ***"
+    index,start = 0,s
+    while s is not Link.empty:
+        if index % 2 == 0 and s.rest != Link.empty:
+            s.rest = s.rest.rest
+            index += 1
+        index += 1
+        s = s.rest
+    s = start
+
 
 
 def cumulative_mul(t):
@@ -40,7 +53,12 @@ def cumulative_mul(t):
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
     "*** YOUR CODE HERE ***"
-
+    if t.is_leaf():
+        pass
+    else:
+        for b in t.branches:
+            cumulative_mul(b)
+            t.label *= b.label
 
 def has_cycle(link):
     """Return whether link contains a cycle.
@@ -57,6 +75,15 @@ def has_cycle(link):
     False
     """
     "*** YOUR CODE HERE ***"
+    if not link:
+        return False
+    fs = link
+    while fs is not Link.empty:
+        fs = fs.rest
+        if fs == link:
+            return True
+    return False
+
 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
@@ -70,6 +97,14 @@ def has_cycle_constant(link):
     False
     """
     "*** YOUR CODE HERE ***"
+    if not link:
+        return False
+    fs = link
+    while fs is not Link.empty:
+        fs = fs.rest
+        if fs == link:
+            return True
+    return False
 
 
 def reverse_other(t):
@@ -86,8 +121,15 @@ def reverse_other(t):
     Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])
     """
     "*** YOUR CODE HERE ***"
-
-
+    if not t.is_leaf() and t:
+        lst=[]
+        for b in t.branches:
+            lst.append(b.label)
+        for i in range(len(lst)):
+            t.branches[i].label = lst[-i-1]
+        for b in t.branches:
+            for l in b.branches:
+                reverse_other(l)
 class Link:
     """A linked list.
 
