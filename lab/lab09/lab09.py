@@ -314,14 +314,13 @@ def insert(link, value, index):
     >>> insert(link, 4, 5)
     IndexError
     """
-    if ____________________:
-        ____________________
-        ____________________
-        ____________________
-    elif ____________________:
-        ____________________
+    if index == 0 and link != Link.empty:
+        link.rest = Link(link.first, link.rest)
+        link.first = value
+    elif link == Link.empty:
+        raise IndexError
     else:
-        ____________________
+        insert(link.rest, value, index - 1)
 
 
 

@@ -3,3 +3,5 @@
 'num_trees-correct', (1024, 70)
 'make_to_string-correct', (1536, 70)
 'deep_len-correct', (2048, 70)
+'insert-correct', (2560, 70)
+'inc_subseqs-correct', (3072, 70)
