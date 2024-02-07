@@ -166,7 +166,13 @@ class BuiltinProcedure(Procedure):
         python_args = []
         # BEGIN PROBLEM 3
         "*** YOUR CODE HERE ***"
+        first = args
+        while first != nil:
+            python_args.append(first.first)
+            first = first.rest
         # END PROBLEM 3
+        if self.use_env == True:
+            python_args.append(env)
         try:
             return self.fn(*python_args)
         except TypeError as err:
