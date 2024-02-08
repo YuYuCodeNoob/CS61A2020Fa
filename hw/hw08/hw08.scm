@@ -58,7 +58,7 @@
       ((zero? exponent) 1)
       ((= exponent 1) base) 
       ((number? base) (expt base exponent))
-      (else (cons '^(cons base (cons exponent nil))))
+      (else (cons '^(list base exponent)))
   )
 )
 
