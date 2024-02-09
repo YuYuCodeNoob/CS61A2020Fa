@@ -312,6 +312,7 @@ def do_lambda_form(expressions, env):
     formals = expressions.first
     validate_formals(formals)
     # BEGIN PROBLEM 8
+    return LambdaProcedure(formals,expressions.rest,env)
     "*** YOUR CODE HERE ***"
     # END PROBLEM 8
 
