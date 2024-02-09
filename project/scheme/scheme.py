@@ -270,6 +270,10 @@ def do_define_form(expressions, env):
     elif isinstance(target, Pair) and scheme_symbolp(target.first):
         # BEGIN PROBLEM 9
         "*** YOUR CODE HERE ***"
+        funcName = target.first
+        argument = target.rest
+        env.define(funcName,do_lambda_form(Pair(argument,expressions.rest),env))
+        return funcName
         # END PROBLEM 9
     else:
         bad_target = target.first if isinstance(target, Pair) else target
@@ -285,7 +289,6 @@ def do_quote_form(expressions, env):
     validate_form(expressions, 1, 1)
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
-    print("DEBUG:",expressions.first)
     return expressions.first
     # END PROBLEM 6
 
