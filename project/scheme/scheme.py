@@ -127,7 +127,7 @@ class Frame(object):
         """Return a new local frame whose parent is SELF, in which the symbols
         in a Scheme list of formal parameters FORMALS are bound to the Scheme
         values in the Scheme list VALS. Raise an error if too many or too few
-        vals are given.
+        vals are given.child
 
         >>> env = create_global_frame()
         >>> formals, expressions = read_line('(a b c)'), read_line('(1 2 3)')
@@ -214,6 +214,8 @@ class LambdaProcedure(Procedure):
         of values, for a lexically-scoped call evaluated in environment ENV."""
         # BEGIN PROBLEM 11
         "*** YOUR CODE HERE ***"
+        child_frame = self.env.make_child_frame(self.formals,args)
+        return child_frame
         # END PROBLEM 11
 
     def __str__(self):
