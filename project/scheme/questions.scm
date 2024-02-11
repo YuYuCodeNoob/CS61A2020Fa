@@ -49,8 +49,17 @@
 
 (define (nondecreaselist s)
     ; BEGIN PROBLEM 17
-    'replace-this-line
-    )
+  (cond
+  ((null? s) '())
+  ((null? (cdr s)) (list s))
+  ((> (car s) (cadr s))
+                      (cons (list (car s)  )(nondecreaselist (cdr s)))
+  )
+  (else
+                      (cons (cons (car s) (car (nondecreaselist (cdr s)))) (cdr (nondecreaselist (cdr s))) )
+  )
+  )
+)
     ; END PROBLEM 17
 
 ;; Problem EC
