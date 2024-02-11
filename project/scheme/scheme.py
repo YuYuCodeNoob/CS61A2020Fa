@@ -413,6 +413,10 @@ def do_cond_form(expressions, env):
         if is_true_primitive(test):
             # BEGIN PROBLEM 13
             "*** YOUR CODE HERE ***"
+            eval_expr = clause.rest
+            if eval_expr == nil:
+                return test
+            return eval_all(eval_expr,env)
             # END PROBLEM 13
         expressions = expressions.rest
 
